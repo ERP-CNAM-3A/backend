@@ -1,12 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Enums
+﻿namespace Domain.Enums
 {
-    internal class ProjectStatus
+    public enum ProjectStatus
     {
+        Active,
+        Inactive,
+        Completed
+    }
+
+    public static class ProjectStatusExtensions
+    {
+        public static string ToFriendlyString(this ProjectStatus status)
+        {
+            switch (status)
+            {
+                case ProjectStatus.Active:
+                    return "Active";
+                case ProjectStatus.Inactive:
+                    return "Inactive";
+                case ProjectStatus.Completed:
+                    return "Completed";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(status), status, null);
+            }
+        }
     }
 }
