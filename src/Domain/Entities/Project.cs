@@ -11,9 +11,8 @@ namespace Domain.Entities
         public DateTime DueDate { get; }
         public int DaysRequired { get; }
         public ProjectStatus Status { get; }
-        public Ressource[] Ressources { get; }
 
-        public Project(Guid id, string name, ProjectType projectType, SaleType saleType, DateTime dueDate, int daysRequired, ProjectStatus status, Ressource[] ressources)
+        public Project(Guid id, string name, ProjectType projectType, SaleType saleType, DateTime dueDate, int daysRequired, ProjectStatus status)
         {
             Id = id;
             Name = name;
@@ -22,10 +21,9 @@ namespace Domain.Entities
             DueDate = dueDate;
             DaysRequired = daysRequired;
             Status = status;
-            Ressources = ressources;
         }
 
-        public Project(string name, ProjectType projectType, SaleType saleType, DateTime dueDate, int daysRequired, ProjectStatus status, Ressource[] ressources)
+        public Project(string name, ProjectType projectType, SaleType saleType, DateTime dueDate, int daysRequired, ProjectStatus status)
         {
             Name = name;
             ProjectType = projectType;
@@ -33,7 +31,6 @@ namespace Domain.Entities
             DueDate = dueDate;
             DaysRequired = daysRequired;
             Status = status;
-            Ressources = ressources;
         }
     }
 }
