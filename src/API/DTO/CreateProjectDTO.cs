@@ -1,6 +1,6 @@
 ﻿using Domain.Enums;
 
-namespace API.Models
+namespace API.DTO
 {
     public sealed class CreateProjectDTO
     {

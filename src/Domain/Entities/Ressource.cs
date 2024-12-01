@@ -10,7 +10,7 @@ namespace Domain.Entities
         public int DailyRate { get; }
 
         public Ressource()
-        {}
+        { }
 
         public Ressource(Guid id, string name, RessourceType type, int dailyRate)
         {
