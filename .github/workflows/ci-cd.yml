@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - test  # Trigger on pushes to the 'test' branch
+      - main  # Trigger on pushes to the 'main' branch
 
 jobs:
   build:
