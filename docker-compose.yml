@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: ERP-API-PROD
+
+    # Build configuration for the API service
+    build:
+      context: .  # The build context is the current directory
+      dockerfile: Dockerfile  # Use the specified Dockerfile for building the image
+    
+    # Map container ports to host machine ports
+    ports:
+      - "5000:8080"  # Expose port 8080 of the container as port 5000 on the host machine for production
+    
+    # Set environment variables for the container
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development  # Set the environment to Development for local development
+    
+    # Mount only necessary directories or data for production (avoid mounting code directories in production)
+    volumes:
+      - ./logs:/app/logs  # Bind mount the logs directory for storing app logs (optional, adjust as needed)
