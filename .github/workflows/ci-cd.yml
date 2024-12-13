@@ -26,9 +26,6 @@ jobs:
             # Navigate to the directory where you want to store the project
             cd /Docker/ERP
 
-            # Remove old project files (optional)
-            rm -rf backend/
-
             # Clone the latest version of the repository from GitHub
             git clone https://github.com/${{ github.repository }} backend
             cd backend
