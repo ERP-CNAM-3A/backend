@@ -1,0 +1,43 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - test  # Trigger on pushes to the 'test' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code from GitHub
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Deploy to your Debian server using SSH
+      - name: Deploy to Debian Server
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.DEBIAN_SERVER_IP }}
+          username: ${{ secrets.DEBIAN_SSH_USER }}
+          key: ${{ secrets.DEBIAN_SSH_KEY }}
+          port: 22
+          script: |
+            # Navigate to the directory where you want to store the project
+            cd /Docker/ERP
+
+            # Remove old project files (optional)
+            rm -rf backend/
+
+            # Clone the latest version of the repository from GitHub
+            git clone https://github.com/${{ github.repository }} backend
+            cd backend
+
+            # Build the Docker Compose application (build the images)
+            docker-compose build
+
+            # Stop and remove existing containers if they exist
+            docker-compose down || true
+
+            # Start the containers in detached mode
+            docker-compose up -d
