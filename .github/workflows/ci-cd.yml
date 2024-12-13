@@ -24,7 +24,7 @@ jobs:
           port: 22
           script: |
             # Navigate to the directory where you want to store the project
-            cd /Docker/ERP
+            cd Docker/ERP/
 
             # Clone the latest version of the repository from GitHub
             git clone https://github.com/${{ github.repository }} backend
