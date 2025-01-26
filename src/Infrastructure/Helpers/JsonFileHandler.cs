@@ -7,8 +7,7 @@ namespace Infrastructure.Helpers
         private static string GetFilePath(string fileName)
         {
             var directory = AppDomain.CurrentDomain.BaseDirectory;
-            var projectDirectory = Path.Combine(directory, "..", "..", "..", "..", "Infrastructure");
-            return Path.Combine(projectDirectory, "Data", fileName);
+            return Path.Combine(directory, "Data", fileName);
         }
 
         public static void WriteToFile<T>(string fileName, List<T> data)
