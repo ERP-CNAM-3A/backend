@@ -4,7 +4,7 @@ namespace API.DTO.UserDTOs
 {
     public sealed class UserDTO
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
