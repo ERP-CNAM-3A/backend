@@ -8,7 +8,7 @@ using API.DTO.SaleDTOs;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class SaleController : ControllerBase
     {
         private readonly IMediator _mediator;
