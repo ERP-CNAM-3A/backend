@@ -1,4 +1,4 @@
-﻿using API.DTO;
+﻿using API.DTO.ProjectDTOs;
 using Application.UseCases.Projects.Commands;
 using Domain.Entities;
 using MediatR;
