@@ -27,7 +27,7 @@ namespace API.Controllers
                 new MeuchEndpointInput()
                 {
                     Key = "PROJECTS_GET_ALL",
-                    Endpoint = "/GetAllProjects",
+                    Endpoint = "/Project/GetAllProjects",
                     Description = "Retourne tous les projets",
                     Type = "GET",
                     RouteFormat = null,
@@ -37,8 +37,48 @@ namespace API.Controllers
                 new MeuchEndpointInput()
                 {
                     Key = "PROJECTS_GET_BY_ID",
-                    Endpoint = "/GetProjectById/{id}",
+                    Endpoint = "/Project/GetProjectById/{id}",
                     Description = "Retourne un projet par son ID",
+                    Type = "GET",
+                    RouteFormat = "/id",
+                    QueryParams = null,
+                    Body = null
+                },
+                new MeuchEndpointInput()
+                {
+                    Key = "RESSOURCES_GET_ALL",
+                    Endpoint = "/Ressource/GetAllRessources",
+                    Description = "Retourne toutes les ressources",
+                    Type = "GET",
+                    RouteFormat = null,
+                    QueryParams = null,
+                    Body = null
+                },
+                new MeuchEndpointInput()
+                {
+                    Key = "RESSOURCES_GET_BY_ID",
+                    Endpoint = "/Ressource/GetRessourceById/{id}",
+                    Description = "Retourne une ressource par son ID",
+                    Type = "GET",
+                    RouteFormat = "/id",
+                    QueryParams = null,
+                    Body = null
+                },
+                new MeuchEndpointInput()
+                {
+                    Key = "SALES_GET_ALL",
+                    Endpoint = "/Sale/GetAllSales",
+                    Description = "Retourne toutes les ventes",
+                    Type = "GET",
+                    RouteFormat = null,
+                    QueryParams = null,
+                    Body = null
+                },
+                new MeuchEndpointInput()
+                {
+                    Key = "SALES_GET_BY_ID",
+                    Endpoint = "/Sale/GetSaleById/{id}",
+                    Description = "Retourne une vente par son ID",
                     Type = "GET",
                     RouteFormat = "/id",
                     QueryParams = null,

@@ -8,7 +8,7 @@ using Application.UseCases.Users.Queries;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;

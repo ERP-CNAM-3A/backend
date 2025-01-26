@@ -8,7 +8,7 @@ using API.DTO.ProjectDTOs;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ProjectController : ControllerBase
     {
         private readonly IMediator _mediator;
