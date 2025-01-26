@@ -25,7 +25,7 @@ namespace API.Controllers
             {
                 new MeuchEndpointInput()
                 {
-                    Key = "PROJECTS_GET_ALL",
+                    Key = "PR_PROJECTS_GET_ALL",
                     Endpoint = "/Project/GetAllProjects",
                     Description = "Retourne tous les projets",
                     Type = "GET",
@@ -35,7 +35,7 @@ namespace API.Controllers
                 },
                 new MeuchEndpointInput()
                 {
-                    Key = "PROJECTS_GET_BY_ID",
+                    Key = "PR_PROJECTS_GET_BY_ID",
                     Endpoint = "/Project/GetProjectById",
                     Description = "Retourne un projet par son ID",
                     Type = "GET",
@@ -45,7 +45,7 @@ namespace API.Controllers
                 },
                 new MeuchEndpointInput()
                 {
-                    Key = "RESSOURCES_GET_ALL",
+                    Key = "PR_RESSOURCES_GET_ALL",
                     Endpoint = "/Ressource/GetAllRessources",
                     Description = "Retourne toutes les ressources",
                     Type = "GET",
@@ -55,7 +55,7 @@ namespace API.Controllers
                 },
                 new MeuchEndpointInput()
                 {
-                    Key = "RESSOURCES_GET_BY_ID",
+                    Key = "PR_RESSOURCES_GET_BY_ID",
                     Endpoint = "/Ressource/GetRessourceById",
                     Description = "Retourne une ressource par son ID",
                     Type = "GET",
@@ -65,7 +65,7 @@ namespace API.Controllers
                 },
                 new MeuchEndpointInput()
                 {
-                    Key = "SALES_GET_ALL",
+                    Key = "PR_SALES_GET_ALL",
                     Endpoint = "/Sale/GetAllSales",
                     Description = "Retourne toutes les ventes",
                     Type = "GET",
@@ -75,7 +75,7 @@ namespace API.Controllers
                 },
                 new MeuchEndpointInput()
                 {
-                    Key = "SALES_GET_BY_ID",
+                    Key = "PR_SALES_GET_BY_ID",
                     Endpoint = "/Sale/GetSaleById",
                     Description = "Retourne une vente par son ID",
                     Type = "GET",
