@@ -17,8 +17,7 @@ namespace API.Controllers
             public List<string> QueryParams { get; set; }
             public string Body { get; set; }
         }
-
-
+        
         [HttpGet("meuch_map")]
         public IActionResult GetMeuch()
         {
@@ -37,11 +36,11 @@ namespace API.Controllers
                 new MeuchEndpointInput()
                 {
                     Key = "PROJECTS_GET_BY_ID",
-                    Endpoint = "/Project/GetProjectById/{id}",
+                    Endpoint = "/Project/GetProjectById",
                     Description = "Retourne un projet par son ID",
                     Type = "GET",
                     RouteFormat = "/id",
-                    QueryParams = null,
+                    QueryParams = ["ID_projet"],
                     Body = null
                 },
                 new MeuchEndpointInput()
@@ -57,11 +56,11 @@ namespace API.Controllers
                 new MeuchEndpointInput()
                 {
                     Key = "RESSOURCES_GET_BY_ID",
-                    Endpoint = "/Ressource/GetRessourceById/{id}",
+                    Endpoint = "/Ressource/GetRessourceById",
                     Description = "Retourne une ressource par son ID",
                     Type = "GET",
                     RouteFormat = "/id",
-                    QueryParams = null,
+                    QueryParams = ["ID_ressource"],
                     Body = null
                 },
                 new MeuchEndpointInput()
@@ -77,11 +76,11 @@ namespace API.Controllers
                 new MeuchEndpointInput()
                 {
                     Key = "SALES_GET_BY_ID",
-                    Endpoint = "/Sale/GetSaleById/{id}",
+                    Endpoint = "/Sale/GetSaleById",
                     Description = "Retourne une vente par son ID",
                     Type = "GET",
                     RouteFormat = "/id",
-                    QueryParams = null,
+                    QueryParams = ["ID_vente"],
                     Body = null
                 }
             };
