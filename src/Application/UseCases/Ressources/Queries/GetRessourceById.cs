@@ -1,22 +1,18 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Ressources;
 using Domain.Repositories;
 using MediatR;
 
 namespace Application.UseCases.Ressources.Queries
 {
-    public sealed record GetRessourceById_Query(Guid Id) : IRequest<Ressource>;
+    public sealed record GetRessourceById_Query(Guid id) : IRequest<Ressource>;
 
-    internal sealed class GetRessourceById_QueryHandler : IRequestHandler<GetRessourceById_Query, Ressource>
+    internal sealed class GetRessourceById_QueryHandler(IRessourceRepository ressourceRepository) : IRequestHandler<GetRessourceById_Query, Ressource>
     {
-        private readonly IRessourceRepository _ressourceRepository;
-        public GetRessourceById_QueryHandler(IRessourceRepository ressourceRepository)
+        private readonly IRessourceRepository _ressourceRepository = ressourceRepository;
+
+        public async Task<Ressource> Handle(GetRessourceById_Query request, CancellationToken cancellationToken)
         {
-            _ressourceRepository = ressourceRepository;
-        }
-        public Task<Ressource> Handle(GetRessourceById_Query request, CancellationToken cancellationToken)
-        {
-            var ressource = _ressourceRepository.GetById(request.Id);
-            return Task.FromResult(ressource);
+            return _ressourceRepository.GetById(request.id);
         }
     }
 }

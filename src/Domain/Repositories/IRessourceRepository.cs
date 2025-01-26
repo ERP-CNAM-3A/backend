@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Ressources;
 
 namespace Domain.Repositories
 {
@@ -6,5 +6,8 @@ namespace Domain.Repositories
     {
         public Ressource GetById(Guid id);
         public List<Ressource> GetAll();
+        public void Add(Ressource ressource);
+        public void Update(Ressource ressource);
+        public void DeleteById(Guid id);
     }
 }

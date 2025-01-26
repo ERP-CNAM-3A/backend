@@ -1,33 +1,123 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Projects;
+using Domain.Exceptions;
 using Domain.Repositories;
+using Infrastructure.Helpers;
 
 namespace Infrastructure.Repositories
 {
-    internal class ProjectRepository : IProjectRepository
+    internal sealed class ProjectRepository : IProjectRepository
     {
+        private const string FileName = "projects.json"; // Fichier de données pour les projets
+
+        // Ajouter un projet
         public void Add(Project project)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var projects = JsonFileHandler.ReadFromFile<Project>(FileName);
+
+                if (projects.Any(p => p.Id == project.Id))
+                {
+                    throw new ProjectAlreadyExistsException(project.Id);
+                }
+
+                projects.Add(project);
+                JsonFileHandler.WriteToFile(FileName, projects);
+            }
+            catch (Exception)
+            {
+                throw new ProjectSaveException();
+            }
         }
 
+        // Supprimer un projet par ID
         public void DeleteById(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var projects = JsonFileHandler.ReadFromFile<Project>(FileName);
+                var projectToRemove = projects.FirstOrDefault(p => p.Id == id);
+
+                if (projectToRemove == null)
+                {
+                    throw new ProjectNotFoundException(id);
+                }
+
+                projects.Remove(projectToRemove);
+                JsonFileHandler.WriteToFile(FileName, projects);
+            }
+            catch (ProjectNotFoundException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw new ProjectSaveException();
+            }
         }
 
+        // Récupérer tous les projets
         public List<Project> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return JsonFileHandler.ReadFromFile<Project>(FileName);
+            }
+            catch (Exception)
+            {
+                throw new ProjectSaveException();
+            }
         }
 
+        // Récupérer un projet par ID
         public Project GetById(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var projects = JsonFileHandler.ReadFromFile<Project>(FileName);
+                var project = projects.FirstOrDefault(p => p.Id == id);
+
+                if (project == null)
+                {
+                    throw new ProjectNotFoundException(id);
+                }
+
+                return project;
+            }
+            catch (ProjectNotFoundException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw new ProjectSaveException();
+            }
         }
 
+        // Mettre à jour un projet
         public void Update(Project project)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var projects = JsonFileHandler.ReadFromFile<Project>(FileName);
+                var index = projects.FindIndex(p => p.Id == project.Id);
+
+                if (index == -1)
+                {
+                    throw new ProjectNotFoundException(project.Id);
+                }
+
+                projects[index] = project;
+                JsonFileHandler.WriteToFile(FileName, projects);
+            }
+            catch (ProjectNotFoundException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw new ProjectSaveException();
+            }
         }
     }
 }
