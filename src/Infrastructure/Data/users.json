@@ -5,12 +5,5 @@
     "LastName": "string",
     "Email": "string",
     "Phone": "string"
-  },
-  {
-    "Id": "0822798c-fc06-4152-aea3-8d036053df6b",
-    "FirstName": "string",
-    "LastName": "string",
-    "Email": "string",
-    "Phone": "string"
   }
 ]
