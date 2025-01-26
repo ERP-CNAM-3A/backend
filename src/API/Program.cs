@@ -1,5 +1,8 @@
 using Application;
+using Domain.Entities.Users;
+using Domain.Repositories;
 using Infrastructure;
+
 
 internal class Program
 {
@@ -14,10 +17,13 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // Setup application mediator for MediatR.
         builder.Services.ApplicationMediator();
+
+        // Setup infrastructure dependency injection.
         builder.Services.InfrastructureDependencyInjection();
 
-
+        // Build the application.
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -30,7 +36,6 @@ internal class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
         app.MapControllers();
 
         app.Run();

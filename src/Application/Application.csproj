@@ -13,9 +13,6 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="UseCases\Projects\Queries\" />
-    <Folder Include="UseCases\Users\Commands\" />
-    <Folder Include="UseCases\Users\" />
-    <Folder Include="UseCases\Users\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
