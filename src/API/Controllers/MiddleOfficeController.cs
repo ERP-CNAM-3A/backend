@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class MiddleOfficeController : ControllerBase
     {
         public class MeuchEndpointInput
