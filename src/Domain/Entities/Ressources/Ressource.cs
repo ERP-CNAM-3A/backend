@@ -5,28 +5,33 @@ namespace Domain.Entities.Ressources
     public sealed class Ressource
     {
         public Guid Id { get; private set; }
-        public string Name { get; private set; }
-        public int DailyRate { get; private set; }
+        public DateTime From { get; private set; }
+        public DateTime To { get; private set; }
+        public int DaysWorking
+        {
 
+            get => (To - From).Days;
+        }
 
         [JsonConstructor]
-        public Ressource(Guid id, string name, int dailyRate)
+        public Ressource(Guid id, DateTime from, DateTime to)
         {
             Id = id;
-            Name = name;
-            DailyRate = dailyRate;
+            From = from;
+            To = to;
         }
 
-        public Ressource(string name, int dailyRate)
+        public Ressource(DateTime from, DateTime to)
         {
-            Name = name;
-            DailyRate = dailyRate;
+            Id = Guid.NewGuid();
+            From = from;
+            To = to;
         }
 
-        public void Update(string name, int dailyRate)
+        public void Update(DateTime from, DateTime to)
         {
-            Name = name;
-            DailyRate = dailyRate;
+            From = from;
+            To = to;
         }
     }
 }

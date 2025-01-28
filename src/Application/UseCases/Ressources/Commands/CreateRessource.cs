@@ -5,8 +5,8 @@ using MediatR;
 namespace Application.UseCases.Ressources.Commands
 {
     public sealed record CreateRessource_Command(
-        string Name,
-        int DailyRate
+        DateTime From,
+        DateTime To
     ) : IRequest<Ressource>;
 
     internal sealed class CreateRessource_CommandHandler(IRessourceRepository ressourceRepository) : IRequestHandler<CreateRessource_Command, Ressource>
@@ -17,8 +17,8 @@ namespace Application.UseCases.Ressources.Commands
         {
             Ressource ressource = new Ressource(
                 Guid.NewGuid(),
-                request.Name,
-                request.DailyRate
+                request.From,
+                request.To
             );
 
             _ressourceRepository.Add(ressource);

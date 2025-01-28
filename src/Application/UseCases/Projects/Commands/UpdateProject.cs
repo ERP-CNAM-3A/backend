@@ -7,7 +7,7 @@ namespace Application.UseCases.Projects.Commands
 {
     public sealed record UpdateProject_Command(
         Guid Id,
-        double Days,
+        double WorkDays,
         List<Ressource> Ressources
     ) : IRequest<Project>;
 
@@ -20,7 +20,7 @@ namespace Application.UseCases.Projects.Commands
             Project project = _projectRepository.GetById(request.Id);
 
             project.Update(
-                request.Days,
+                request.WorkDays,
                 request.Ressources);
 
             _projectRepository.Update(project);

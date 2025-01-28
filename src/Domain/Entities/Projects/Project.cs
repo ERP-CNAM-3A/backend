@@ -8,31 +8,39 @@ namespace Domain.Entities.Projects
     {
         public Guid Id { get; set; }
         public Sale Sale { get; set; }
-        public double Days { get; set; }
+        public double WorkDaysNeeded { get; set; }
         public List<Ressource> Ressources { get; set; }
+        public double WorkDaysAvailable
+        {
+            get => Ressources.Sum(r => r.DaysWorking);
+        }
+        public bool CanDeliver
+        {
+            get => WorkDaysAvailable >= WorkDaysNeeded;
+        }
 
         public Project() { }
 
         [JsonConstructor]
-        public Project(Guid id, Sale sale, double days, List<Ressource> ressources)
+        public Project(Guid id, Sale sale, double workDaysNeeded, List<Ressource> ressources)
         {
             Id = id;
             Sale = sale;
-            Days = days;
+            WorkDaysNeeded = workDaysNeeded;
             Ressources = ressources;
         }
 
-        public Project(Sale sale, double days, List<Ressource> ressources)
+        public Project(Sale sale, double workDaysNeeded, List<Ressource> ressources)
         {
             Id = Guid.NewGuid();
             Sale = sale;
-            Days = days;
+            WorkDaysNeeded = workDaysNeeded;
             Ressources = ressources;
         }
 
-        public void Update(double days, List<Ressource> ressources)
+        public void Update(double workDaysNeeded, List<Ressource> ressources)
         {
-            Days = days;
+            WorkDaysNeeded = workDaysNeeded;
             Ressources = ressources;
         }
     }
