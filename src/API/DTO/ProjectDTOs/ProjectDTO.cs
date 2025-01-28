@@ -8,8 +8,16 @@ namespace API.DTO.ProjectDTOs
     {
         public Guid Id { get; set; }
         public Sale Sale { get; set; }
-        public double WorkDays { get; set; }
+        public double WorkDaysNeeded { get; set; }
         public List<Ressource> Ressources { get; set; }
+        public double WorkDaysAvailable
+        {
+            get => Ressources.Sum(r => r.DaysWorking);
+        }
+        public bool CanDeliver
+        {
+            get => WorkDaysAvailable >= WorkDaysNeeded;
+        }
 
         public ProjectDTO() { }
 
@@ -17,7 +25,7 @@ namespace API.DTO.ProjectDTOs
         {
             Id = project.Id;
             Sale = project.Sale;
-            WorkDays = project.WorkDays;
+            WorkDaysNeeded = project.WorkDaysNeeded;
             Ressources = project.Ressources;
         }
     }

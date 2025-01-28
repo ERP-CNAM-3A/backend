@@ -5,14 +5,14 @@ namespace API.DTO.ProjectDTOs
 {
     public sealed class UpdateProjectDTO
     {
-        public double WorkDays { get; set; }
+        public double WorkDaysNeeded { get; set; }
         public List<Ressource> Ressources { get; set; }
 
         public UpdateProjectDTO() { }
 
         public UpdateProjectDTO(Project project)
         {
-            WorkDays = project.WorkDays;
+            WorkDaysNeeded = project.WorkDaysNeeded;
             Ressources = project.Ressources;
         }
     }

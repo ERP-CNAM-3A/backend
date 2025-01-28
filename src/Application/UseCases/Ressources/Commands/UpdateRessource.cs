@@ -6,8 +6,8 @@ namespace Application.UseCases.Ressources.Commands
 {
     public sealed record UpdateRessource_Command(
         Guid Id,
-        string Name,
-        int DailyRate
+        DateTime From,
+        DateTime To
     ) : IRequest<Ressource>;
 
     internal sealed class UpdateRessource_CommandHandler(IRessourceRepository ressourceRepository) : IRequestHandler<UpdateRessource_Command, Ressource>
@@ -18,7 +18,7 @@ namespace Application.UseCases.Ressources.Commands
         {
             Ressource ressource = _ressourceRepository.GetById(request.Id);
 
-            ressource.Update(request.Name, request.DailyRate);
+            ressource.Update(request.From, request.To);
 
             _ressourceRepository.Update(ressource);
 

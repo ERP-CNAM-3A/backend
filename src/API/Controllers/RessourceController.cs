@@ -72,7 +72,7 @@ namespace API.Controllers
         public async Task<IActionResult> CreateRessource(RessourceDTO input)
         {
             var command = new CreateRessource_Command(
-                input.Name, input.DailyRate);
+                input.From, input.To);
             try
             {
                 Ressource createdRessource = await _mediator.Send(command);
@@ -97,7 +97,7 @@ namespace API.Controllers
         [HttpPut("UpdateRessource/{id}")]
         public async Task<IActionResult> UpdateRessource(Guid id, UpdateRessourceDTO input)
         {
-            var command = new UpdateRessource_Command(id, input.Name, input.DailyRate);
+            var command = new UpdateRessource_Command(id, input.From, input.To);
             try
             {
                 Ressource ressourceUpdated = await _mediator.Send(command);

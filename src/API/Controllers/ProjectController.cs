@@ -62,6 +62,46 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Launches a simulation to verify if projects can be delivered on time.
+        /// </summary>
+        /// <returns>A list of simulation results, including project delivery feasibility.</returns>
+        [HttpGet("SimulateProjectsDelivery")]
+        public async Task<IActionResult> SimulateProjectsDelivery()
+        {
+            var query = new GetProjectsSimulations_Query();
+            try
+            {
+                var results = await _mediator.Send(query);
+                return Ok(results);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Launches a simulation to verify if a specific project can be delivered on time based on its ID.
+        /// </summary>
+        /// <param name="id">The unique identifier of the project to simulate.</param>
+        /// <returns>A simulation result for the project, including its delivery feasibility.</returns>
+        [HttpGet("SimulateProjectDeliveryById/{id}")]
+        public async Task<IActionResult> SimulateProjectDeliveryById(Guid id)
+        {
+            var query = new GetProjectSimulationById_Query(id);
+            try
+            {
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
         #endregion
 
         #region POST
@@ -100,7 +140,7 @@ namespace API.Controllers
         {
             var command = new UpdateProject_Command(
                 id,
-                input.WorkDays,
+                input.WorkDaysNeeded,
                 input.Ressources
             );
             try

@@ -4,15 +4,15 @@ namespace API.DTO.RessourceDTOs
 {
     public sealed class UpdateRessourceDTO
     {
-        public string Name { get; set; }
-        public int DailyRate { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
 
         public UpdateRessourceDTO() { }
 
         public UpdateRessourceDTO(Ressource ressource)
         {
-            Name = ressource.Name;
-            DailyRate = ressource.DailyRate;
+            From = ressource.From;
+            To = ressource.To;
         }
     }
 }
