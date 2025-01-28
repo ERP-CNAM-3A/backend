@@ -1,5 +1,4 @@
 ﻿using Domain.Entities.Ressources;
-using Domain.Enums;
 using Domain.Repositories;
 using MediatR;
 
@@ -7,7 +6,6 @@ namespace Application.UseCases.Ressources.Commands
 {
     public sealed record CreateRessource_Command(
         string Name,
-        RessourceType Type,
         int DailyRate
     ) : IRequest<Ressource>;
 
@@ -20,7 +18,6 @@ namespace Application.UseCases.Ressources.Commands
             Ressource ressource = new Ressource(
                 Guid.NewGuid(),
                 request.Name,
-                request.Type,
                 request.DailyRate
             );
 

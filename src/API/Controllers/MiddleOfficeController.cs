@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace API.Controllers
 {
@@ -17,7 +16,7 @@ namespace API.Controllers
             public List<string> QueryParams { get; set; }
             public string Body { get; set; }
         }
-        
+
         [HttpGet("meuch_map")]
         public IActionResult GetMeuch()
         {
@@ -41,46 +40,6 @@ namespace API.Controllers
                     Type = "GET",
                     RouteFormat = "/id",
                     QueryParams = ["ID_projet"],
-                    Body = null
-                },
-                new MeuchEndpointInput()
-                {
-                    Key = "PR_RESSOURCES_GET_ALL",
-                    Endpoint = "/Ressource/GetAllRessources",
-                    Description = "Retourne toutes les ressources",
-                    Type = "GET",
-                    RouteFormat = null,
-                    QueryParams = null,
-                    Body = null
-                },
-                new MeuchEndpointInput()
-                {
-                    Key = "PR_RESSOURCES_GET_BY_ID",
-                    Endpoint = "/Ressource/GetRessourceById",
-                    Description = "Retourne une ressource par son ID",
-                    Type = "GET",
-                    RouteFormat = "/id",
-                    QueryParams = ["ID_ressource"],
-                    Body = null
-                },
-                new MeuchEndpointInput()
-                {
-                    Key = "PR_SALES_GET_ALL",
-                    Endpoint = "/Sale/GetAllSales",
-                    Description = "Retourne toutes les ventes",
-                    Type = "GET",
-                    RouteFormat = null,
-                    QueryParams = null,
-                    Body = null
-                },
-                new MeuchEndpointInput()
-                {
-                    Key = "PR_SALES_GET_BY_ID",
-                    Endpoint = "/Sale/GetSaleById",
-                    Description = "Retourne une vente par son ID",
-                    Type = "GET",
-                    RouteFormat = "/id",
-                    QueryParams = ["ID_vente"],
                     Body = null
                 }
             };

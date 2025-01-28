@@ -1,5 +1,4 @@
 ﻿using Domain.Entities.Ressources;
-using Domain.Enums;
 
 namespace API.DTO.RessourceDTOs
 {
@@ -7,7 +6,6 @@ namespace API.DTO.RessourceDTOs
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public RessourceType Type { get; set; }
         public int DailyRate { get; set; }
 
         public RessourceDTO() { }
@@ -16,7 +14,6 @@ namespace API.DTO.RessourceDTOs
         {
             Id = ressource.Id;
             Name = ressource.Name;
-            Type = ressource.Type;
             DailyRate = ressource.DailyRate;
         }
     }

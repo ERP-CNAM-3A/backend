@@ -1,50 +1,54 @@
-﻿using Domain.Enums;
-using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Domain.Entities.Sales
 {
     public sealed class Sale
     {
-        public Guid Id { get; private set; }
-        public SaleType Type { get; private set; }
-        public Guid ClientId { get; private set; }
-        public string What { get; private set; }
-        public decimal Quantity { get; private set; }
-        public SaleStatus Status { get; private set; }
-        public double Chance { get; private set; }
+        public Guid Id { get; set; }
+        public string Type { get; set; }
+        public string Client { get; set; }
+        public string Product { get; set; }
+        public decimal Amount { get; set; }
+        public string Date { get; set; }
+        public string Status { get; set; }
+        public string Probability { get; set; }
+
+        public Sale() { }
 
         [JsonConstructor]
-        public Sale(Guid id, SaleType type, Guid clientId, string what, decimal quantity, SaleStatus status, double chance)
+        public Sale(Guid id, string type, string client, string product, decimal amount, string date, string status, string probability)
         {
             Id = id;
             Type = type;
-            ClientId = clientId;
-            What = what;
-            Quantity = quantity;
+            Client = client;
+            Product = product;
+            Amount = amount;
+            Date = date;
             Status = status;
-            Chance = chance;
+            Probability = probability;
         }
 
-        public Sale(SaleType type, Guid clientId, string what, decimal quantity, SaleStatus status, double chance)
+        public Sale(string type, string client, string product, decimal amount, string date, string status, string probability)
         {
             Id = Guid.NewGuid();
             Type = type;
-            ClientId = clientId;
-            What = what;
-            Quantity = quantity;
+            Client = client;
+            Product = product;
+            Amount = amount;
+            Date = date;
             Status = status;
-            Chance = chance;
+            Probability = probability;
         }
 
-        public void Update(SaleType type, Guid clientId, string what, decimal quantity, SaleStatus status, double chance)
+        public void Update(string type, string client, string product, decimal amount, string date, string status, string probability)
         {
             Type = type;
-            ClientId = clientId;
-            What = what;
-            Quantity = quantity;
+            Client = client;
+            Product = product;
+            Amount = amount;
+            Date = date;
             Status = status;
-            Chance = chance;
+            Probability = probability;
         }
 
     }

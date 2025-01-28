@@ -1,17 +1,15 @@
 ﻿using Domain.Entities.Projects;
-using Domain.Enums;
+using Domain.Entities.Ressources;
+using Domain.Entities.Sales;
 using Domain.Repositories;
 using MediatR;
 
 namespace Application.UseCases.Projects.Commands
 {
     public sealed record CreateProject_Command(
-        string Name,
-        ProjectType ProjectType,
-        SaleType SaleType,
-        DateTime DueDate,
-        int DaysRequired,
-        ProjectStatus Status
+        Sale Sales,
+        double Days,
+        List<Ressource> Ressources
     ) : IRequest<Project>;
 
     internal sealed class CreateProject_CommandHandler(IProjectRepository projectRepository) : IRequestHandler<CreateProject_Command, Project>
@@ -22,12 +20,9 @@ namespace Application.UseCases.Projects.Commands
         {
             Project project = new Project(
                 Guid.NewGuid(),
-                request.Name,
-                request.ProjectType,
-                request.SaleType,
-                request.DueDate,
-                request.DaysRequired,
-                request.Status
+                request.Sales,
+                request.Days,
+                request.Ressources
             );
 
             _projectRepository.Add(project);

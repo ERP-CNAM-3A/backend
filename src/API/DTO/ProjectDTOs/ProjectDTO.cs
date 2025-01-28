@@ -1,29 +1,24 @@
 ﻿using Domain.Entities.Projects;
-using Domain.Enums;
+using Domain.Entities.Ressources;
+using Domain.Entities.Sales;
 
 namespace API.DTO.ProjectDTOs
 {
     public sealed class ProjectDTO
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public ProjectType ProjectType { get; set; }
-        public SaleType SaleType { get; set; }
-        public DateTime DueDate { get; set; }
-        public int DaysRequired { get; set; }
-        public ProjectStatus Status { get; set; }
+        public Sale Sale { get; set; }
+        public double Days { get; set; }
+        public List<Ressource> Ressources { get; set; }
 
         public ProjectDTO() { }
 
         public ProjectDTO(Project project)
         {
             Id = project.Id;
-            Name = project.Name;
-            ProjectType = project.ProjectType;
-            SaleType = project.SaleType;
-            DueDate = project.DueDate;
-            DaysRequired = project.DaysRequired;
-            Status = project.Status;
+            Sale = project.Sale;
+            Days = project.Days;
+            Ressources = project.Ressources;
         }
     }
 }

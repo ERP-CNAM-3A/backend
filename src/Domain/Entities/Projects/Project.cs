@@ -1,48 +1,39 @@
-﻿using Domain.Enums;
+﻿using Domain.Entities.Ressources;
+using Domain.Entities.Sales;
 using System.Text.Json.Serialization;
 
 namespace Domain.Entities.Projects
 {
     public sealed class Project
     {
-        public Guid Id { get; private set; }
-        public string Name { get; private set; }
-        public ProjectType ProjectType { get; private set; }
-        public SaleType SaleType { get; private set; }
-        public DateTime DueDate { get; private set; }
-        public int DaysRequired { get; private set; }
-        public ProjectStatus Status { get; private set; }
+        public Guid Id { get; set; }
+        public Sale Sale { get; set; }
+        public double Days { get; set; }
+        public List<Ressource> Ressources { get; set; }
+
+        public Project() { }
 
         [JsonConstructor]
-        public Project(Guid id, string name, ProjectType projectType, SaleType saleType, DateTime dueDate, int daysRequired, ProjectStatus status)
+        public Project(Guid id, Sale sale, double days, List<Ressource> ressources)
         {
             Id = id;
-            Name = name;
-            ProjectType = projectType;
-            SaleType = saleType;
-            DueDate = dueDate;
-            DaysRequired = daysRequired;
-            Status = status;
+            Sale = sale;
+            Days = days;
+            Ressources = ressources;
         }
 
-        public Project(string name, ProjectType projectType, SaleType saleType, DateTime dueDate, int daysRequired, ProjectStatus status)
+        public Project(Sale sale, double days, List<Ressource> ressources)
         {
-            Name = name;
-            ProjectType = projectType;
-            SaleType = saleType;
-            DueDate = dueDate;
-            DaysRequired = daysRequired;
-            Status = status;
+            Id = Guid.NewGuid();
+            Sale = sale;
+            Days = days;
+            Ressources = ressources;
         }
 
-        public void Update(string name, ProjectType projectType, SaleType saleType, DateTime dueDate, int daysRequired, ProjectStatus status)
+        public void Update(double days, List<Ressource> ressources)
         {
-            Name = name;
-            ProjectType = projectType;
-            SaleType = saleType;
-            DueDate = dueDate;
-            DaysRequired = daysRequired;
-            Status = status;
+            Days = days;
+            Ressources = ressources;
         }
     }
 }

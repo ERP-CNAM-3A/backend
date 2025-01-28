@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Domain.Exceptions
+﻿namespace Domain.Exceptions
 {
     /// <summary>
     /// Exception thrown when a sale with a given ID already exists.
