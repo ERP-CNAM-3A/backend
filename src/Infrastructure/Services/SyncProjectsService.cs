@@ -81,14 +81,14 @@ namespace Infrastructure.Services
                     var project = new Project
                     {
                         Sale = sale,
-                        Days = randomDays,
+                        WorkDays = randomDays,
                         Ressources = new List<Ressource>()
                     };
 
                     // Create the command to create the project in the system
                     var command = new CreateProject_Command(
                         project.Sale,
-                        project.Days,
+                        project.WorkDays,
                         project.Ressources
                     );
 

@@ -100,7 +100,7 @@ namespace API.Controllers
         {
             var command = new UpdateProject_Command(
                 id,
-                input.Days,
+                input.WorkDays,
                 input.Ressources
             );
             try

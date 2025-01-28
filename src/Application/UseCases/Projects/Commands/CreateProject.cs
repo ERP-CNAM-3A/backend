@@ -8,7 +8,7 @@ namespace Application.UseCases.Projects.Commands
 {
     public sealed record CreateProject_Command(
         Sale Sales,
-        double Days,
+        double WorkDays,
         List<Ressource> Ressources
     ) : IRequest<Project>;
 
@@ -21,7 +21,7 @@ namespace Application.UseCases.Projects.Commands
             Project project = new Project(
                 Guid.NewGuid(),
                 request.Sales,
-                request.Days,
+                request.WorkDays,
                 request.Ressources
             );
 
