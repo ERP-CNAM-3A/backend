@@ -1,14 +1,12 @@
-﻿using MediatR;
+﻿using Domain.Entities.Ressources;
 using Domain.Repositories;
-using Domain.Entities.Ressources;
-using Domain.Enums;
+using MediatR;
 
 namespace Application.UseCases.Ressources.Commands
 {
     public sealed record UpdateRessource_Command(
         Guid Id,
         string Name,
-        RessourceType Type,
         int DailyRate
     ) : IRequest<Ressource>;
 
@@ -20,7 +18,7 @@ namespace Application.UseCases.Ressources.Commands
         {
             Ressource ressource = _ressourceRepository.GetById(request.Id);
 
-            ressource.Update(request.Name, request.Type, request.DailyRate);
+            ressource.Update(request.Name, request.DailyRate);
 
             _ressourceRepository.Update(ressource);
 

@@ -1,17 +1,17 @@
 ﻿using Domain.Entities.Sales;
-using Domain.Enums;
 using Domain.Repositories;
 using MediatR;
 
 namespace Application.UseCases.Sales.Commands
 {
     public sealed record CreateSale_Command(
-        SaleType Type,
-        Guid ClientId,
-        string What,
-        decimal Quantity,
-        SaleStatus Status,
-        double Chance
+        string Type,
+        string Client,
+        string Product,
+        decimal Amount,
+        string Date,
+        string Status,
+        string Probability
     ) : IRequest<Sale>;
 
     internal sealed class CreateSale_CommandHandler(ISaleRepository saleRepository) : IRequestHandler<CreateSale_Command, Sale>
@@ -23,11 +23,12 @@ namespace Application.UseCases.Sales.Commands
             Sale sale = new Sale(
                 Guid.NewGuid(),
                 request.Type,
-                request.ClientId,
-                request.What,
-                request.Quantity,
+                request.Client,
+                request.Product,
+                request.Amount,
+                request.Date,
                 request.Status,
-                request.Chance
+                request.Probability
             );
 
             _saleRepository.Add(sale);

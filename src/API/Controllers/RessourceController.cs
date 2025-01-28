@@ -1,9 +1,9 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using API.DTO.RessourceDTOs;
 using Application.UseCases.Ressources.Commands;
 using Application.UseCases.Ressources.Queries;
 using Domain.Entities.Ressources;
-using API.DTO.RessourceDTOs;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
@@ -72,7 +72,7 @@ namespace API.Controllers
         public async Task<IActionResult> CreateRessource(RessourceDTO input)
         {
             var command = new CreateRessource_Command(
-                input.Name, input.Type, input.DailyRate);
+                input.Name, input.DailyRate);
             try
             {
                 Ressource createdRessource = await _mediator.Send(command);
@@ -97,7 +97,7 @@ namespace API.Controllers
         [HttpPut("UpdateRessource/{id}")]
         public async Task<IActionResult> UpdateRessource(Guid id, UpdateRessourceDTO input)
         {
-            var command = new UpdateRessource_Command(id, input.Name, input.Type, input.DailyRate);
+            var command = new UpdateRessource_Command(id, input.Name, input.DailyRate);
             try
             {
                 Ressource ressourceUpdated = await _mediator.Send(command);

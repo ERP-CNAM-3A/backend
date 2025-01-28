@@ -1,5 +1,5 @@
-﻿using MediatR;
-using Domain.Repositories;
+﻿using Domain.Repositories;
+using MediatR;
 
 namespace Application.UseCases.Ressources.Commands
 {

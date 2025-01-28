@@ -19,9 +19,6 @@ internal class Program
         // Setup infrastructure dependency injection.
         builder.Services.InfrastructureDependencyInjection();
 
-        // Register MiddlewareRegistrationService in the dependency injection container.
-        builder.Services.AddSingleton<MiddlewareRegistrationService>();
-
         // Build the application.
         var app = builder.Build();
 
@@ -36,15 +33,12 @@ internal class Program
         app.UseAuthorization();
         app.MapControllers();
 
-        // Middleware registration AFTER the application is fully built
-        // Using an IHost callback that runs after the app is ready
-        var scope = app.Services.CreateScope();
-        var registrationService = scope.ServiceProvider.GetRequiredService<MiddlewareRegistrationService>();
-
         // Register asynchronously once the app is ready
         app.Lifetime.ApplicationStarted.Register(async () =>
         {
-            await registrationService.RegisterApiAsync(); // Call the registration service
+            // Directly retrieve the service from app.Services
+            var registrationService = app.Services.GetRequiredService<MiddlewareRegistrationService>();
+            await registrationService.RegisterApiAsync();
         });
 
         // Run the application.

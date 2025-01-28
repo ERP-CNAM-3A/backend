@@ -2,7 +2,6 @@
 using Domain.Exceptions;
 using Domain.Repositories;
 using Infrastructure.Helpers;
-using System.IO;
 
 namespace Infrastructure.Repositories
 {

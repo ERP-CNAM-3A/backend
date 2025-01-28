@@ -1,9 +1,10 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using API.DTO.ProjectDTOs;
 using Application.UseCases.Projects.Commands;
 using Application.UseCases.Projects.Queries;
 using Domain.Entities.Projects;
-using API.DTO.ProjectDTOs;
+using Infrastructure.Services;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
@@ -12,10 +13,12 @@ namespace API.Controllers
     public class ProjectController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly SyncProjectsService _syncProjectsService;
 
-        public ProjectController(IMediator mediator)
+        public ProjectController(IMediator mediator, SyncProjectsService syncProjectsService)
         {
             _mediator = mediator;
+            _syncProjectsService = syncProjectsService;
         }
 
         #region GET
@@ -64,29 +67,21 @@ namespace API.Controllers
         #region POST
 
         /// <summary>
-        /// Creates a new project.
+        /// Syncs projects for all external sales.
+        /// This operation will synchronize the external sales data with the projects.
         /// </summary>
-        /// <param name="input">The project data transfer object containing information for creating the project.</param>
-        /// <returns>The details of the newly created project.</returns>
-        [HttpPost("CreateProject")]
-        public async Task<IActionResult> CreateProject(ProjectDTO input)
+        /// <returns>A response indicating the success or failure of the synchronization process.</returns>
+        [HttpPost("SyncProjects")]
+        public async Task<IActionResult> SyncProjects()
         {
-            var command = new CreateProject_Command(
-                input.Name,
-                input.ProjectType,
-                input.SaleType,
-                input.DueDate,
-                input.DaysRequired,
-                input.Status
-            );
             try
             {
-                Project createdProject = await _mediator.Send(command);
-                return Ok(new ProjectDTO(createdProject));
+                await _syncProjectsService.SyncProjectsAsync();
+                return Ok("Projects successfully synced for all external sales.");
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest($"Error syncing projects: {e.Message}");
             }
         }
 
@@ -105,12 +100,8 @@ namespace API.Controllers
         {
             var command = new UpdateProject_Command(
                 id,
-                input.Name,
-                input.ProjectType,
-                input.SaleType,
-                input.DueDate,
-                input.DaysRequired,
-                input.Status
+                input.Days,
+                input.Ressources
             );
             try
             {

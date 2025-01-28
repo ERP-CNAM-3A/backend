@@ -1,18 +1,18 @@
-﻿using MediatR;
+﻿using Domain.Entities.Sales;
 using Domain.Repositories;
-using Domain.Enums;
-using Domain.Entities.Sales;
+using MediatR;
 
 namespace Application.UseCases.Sales.Commands
 {
     public sealed record UpdateSale_Command(
         Guid Id,
-        SaleType Type,
-        Guid ClientId,
-        string What,
-        decimal Quantity,
-        SaleStatus Status,
-        double Chance
+        string Type,
+        string Client,
+        string Product,
+        decimal Amount,
+        string Date,
+        string Status,
+        string Probability
     ) : IRequest<Sale>;
 
     internal sealed class UpdateSale_CommandHandler(ISaleRepository saleRepository) : IRequestHandler<UpdateSale_Command, Sale>
@@ -25,11 +25,12 @@ namespace Application.UseCases.Sales.Commands
 
             sale.Update(
                 request.Type,
-                request.ClientId,
-                request.What,
-                request.Quantity,
+                request.Client,
+                request.Product,
+                request.Amount,
+                request.Date,
                 request.Status,
-                request.Chance
+                request.Probability
             );
 
             _saleRepository.Update(sale);

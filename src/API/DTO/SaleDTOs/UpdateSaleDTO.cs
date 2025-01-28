@@ -1,27 +1,26 @@
 ﻿using Domain.Entities.Sales;
-using Domain.Enums;
 
 namespace API.DTO.SaleDTOs
 {
     public sealed class UpdateSaleDTO
     {
-        public SaleType Type { get; set; }
-        public Guid ClientId { get; set; }
-        public string What { get; set; }
-        public decimal Quantity { get; set; }
-        public SaleStatus Status { get; set; }
-        public double Chance { get; set; }
-        
+        public string Type { get; set; }
+        public string Client { get; set; }
+        public string Product { get; set; }
+        public decimal Amount { get; set; }
+        public string Status { get; set; }
+        public string Probability { get; set; }
+
         public UpdateSaleDTO() { }
 
         public UpdateSaleDTO(Sale sale)
         {
             Type = sale.Type;
-            ClientId = sale.ClientId;
-            What = sale.What;
-            Quantity = sale.Quantity;
+            Client = sale.Client;
+            Product = sale.Product;
+            Amount = sale.Amount;
             Status = sale.Status;
-            Chance = sale.Chance;
+            Probability = sale.Probability;
         }
     }
 }
