@@ -11,12 +11,10 @@ namespace API.Controllers
     public class RessourceController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<RessourceController> _logger;
 
-        public RessourceController(IMediator mediator, ILogger<RessourceController> logger)
+        public RessourceController(IMediator mediator)
         {
             _mediator = mediator;
-            _logger = logger;
         }
 
         #region GET
@@ -28,7 +26,6 @@ namespace API.Controllers
         [HttpGet("GetAllRessources")]
         public async Task<IActionResult> GetAllRessources()
         {
-            _logger.LogInformation("GetAllRessources called");
             try
             {
                 var query = new GetAllRessources_Query();
@@ -39,12 +36,10 @@ namespace API.Controllers
                     Name = r.Name,
                     Type = r.Type
                 }).ToList();
-                _logger.LogInformation("GetAllRessources succeeded");
                 return Ok(result);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "GetAllRessources failed");
                 return BadRequest(e.Message);
             }
         }
@@ -57,7 +52,6 @@ namespace API.Controllers
         [HttpPost("GetAvailableRessourcesBetween")]
         public async Task<IActionResult> GetAvailableRessourcesBetween([FromBody] AvailabilityPeriodDTO dto)
         {
-            _logger.LogInformation("GetAvailableRessourcesBetween called with StartDate: {StartDate}, EndDate: {EndDate}", dto.StartDate, dto.EndDate);
             var query = new GetAvailableRessourcesBetween_Query(dto.StartDate, dto.EndDate);
             try
             {
@@ -73,12 +67,10 @@ namespace API.Controllers
                         EndDate = p.EndDate
                     }).ToList()
                 }).ToList();
-                _logger.LogInformation("GetAvailableRessourcesBetween succeeded");
                 return Ok(result);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "GetAvailableRessourcesBetween failed");
                 return BadRequest(e.Message);
             }
         }

@@ -22,6 +22,8 @@ namespace Application.UseCases.Projects.Queries
                 ProjectId = project.Id,
                 WorkDays = project.WorkDaysNeeded,
                 RessourcesAssigned = project.Ressources.Count,
+                AvailableWorkDays = project.Ressources.Sum(r => r.DaysWorking),
+                RemainingNeededWorkDays = project.WorkDaysNeeded - project.Ressources.Sum(r => r.DaysWorking),
                 CanBeDeliveredOnTime = canBeDeliveredOnTime
             };
         }

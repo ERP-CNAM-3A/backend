@@ -2,6 +2,7 @@
 using Domain.Exceptions;
 using Domain.Repositories;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Projects.Commands
 {
@@ -12,7 +13,7 @@ namespace Application.UseCases.Projects.Commands
         private readonly IProjectRepository _projectRepository;
         private readonly IExternalRessourceService _externalRessourceService;
 
-        public DeassignRessource_CommandHandler(IProjectRepository projectRepository, IExternalRessourceService externalRessourceService)
+        public DeassignRessource_CommandHandler(IProjectRepository projectRepository, IExternalRessourceService externalRessourceService, ILogger<DeassignRessource_CommandHandler> logger)
         {
             _projectRepository = projectRepository;
             _externalRessourceService = externalRessourceService;
@@ -64,7 +65,3 @@ namespace Application.UseCases.Projects.Commands
         }
     }
 }
-
-
-
-

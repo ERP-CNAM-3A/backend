@@ -26,7 +26,7 @@ namespace Infrastructure.Services
         public async Task<List<Sale>> GetExternalSalesAsync()
         {
             // Send a GET request to the external sales API endpoint.
-            var response = await _httpClient.GetAsync("https://ascg8s8k8gg8ow0scwcw8ock.goudale.tgimenez.fr/api/sales-backlog");
+            var response = await _httpClient.GetAsync("https://livl-erp-api.goudale.tgimenez.fr/api/sales-backlog");
 
             // Check if the response is successful (status code 2xx).
             if (!response.IsSuccessStatusCode)
