@@ -6,13 +6,18 @@ namespace Application.UseCases.Ressources.Queries
 {
     public sealed record GetAllRessources_Query() : IRequest<List<Ressource>>;
 
-    internal sealed class GetAllRessources_QueryHandler(IRessourceRepository ressourceRepository) : IRequestHandler<GetAllRessources_Query, List<Ressource>>
+    internal sealed class GetAllRessources_QueryHandler : IRequestHandler<GetAllRessources_Query, List<Ressource>>
     {
-        private readonly IRessourceRepository _ressourceRepository = ressourceRepository;
+        private readonly IExternalRessourceService _externalRessourceService;
+
+        public GetAllRessources_QueryHandler(IExternalRessourceService externalRessourceService)
+        {
+            _externalRessourceService = externalRessourceService;
+        }
 
         public async Task<List<Ressource>> Handle(GetAllRessources_Query request, CancellationToken cancellationToken)
         {
-            return _ressourceRepository.GetAll().ToList();
+            return await _externalRessourceService.GetAllRessourcesAsync();
         }
     }
 }

@@ -2,12 +2,20 @@
 using Domain.Exceptions;
 using Domain.Repositories;
 using Infrastructure.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Repositories
 {
     internal sealed class ProjectRepository : IProjectRepository
     {
         private const string FileName = "projects.json"; // Fichier de données pour les projets
+        private readonly ILogger<ProjectRepository> _logger;
+
+        public ProjectRepository(ILogger<ProjectRepository> logger)
+        {
+            _logger = logger;
+        }
+
 
         // Ajouter un projet
         public void Add(Project project)
@@ -63,8 +71,9 @@ namespace Infrastructure.Repositories
             {
                 return JsonFileHandler.ReadFromFile<Project>(FileName);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error while GetAll");
                 throw new ProjectSaveException();
             }
         }

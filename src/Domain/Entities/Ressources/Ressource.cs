@@ -4,34 +4,51 @@ namespace Domain.Entities.Ressources
 {
     public sealed class Ressource
     {
-        public Guid Id { get; private set; }
-        public DateTime From { get; private set; }
-        public DateTime To { get; private set; }
-        public int DaysWorking
-        {
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public string Type { get; private set; }
+        public int GroupId { get; private set; }
+        public List<AvailabilityPeriod> AvailabilityPeriods { get; private set; } = new List<AvailabilityPeriod>();
 
-            get => (To - From).Days;
+        public Ressource(int id, string name, string type, int groupId)
+        {
+            Id = id;
+            Name = name;
+            Type = type;
+            GroupId = groupId;
         }
 
         [JsonConstructor]
-        public Ressource(Guid id, DateTime from, DateTime to)
+        public Ressource(int id, List<AvailabilityPeriod> availabilityPeriods)
         {
             Id = id;
-            From = from;
-            To = to;
+            AvailabilityPeriods = availabilityPeriods;
         }
 
-        public Ressource(DateTime from, DateTime to)
+        public Ressource(int id, string name, string type, int groupId, List<AvailabilityPeriod> availabilityPeriods)
         {
-            Id = Guid.NewGuid();
-            From = from;
-            To = to;
+            Id = id;
+            Name = name;
+            Type = type;
+            GroupId = groupId;
+            AvailabilityPeriods = availabilityPeriods;
         }
 
-        public void Update(DateTime from, DateTime to)
+        public int DaysWorking
         {
-            From = from;
-            To = to;
+            get => AvailabilityPeriods.Sum(p => (p.EndDate - p.StartDate).Days);
+        }
+    }
+
+    public class AvailabilityPeriod
+    {
+        public DateTime StartDate { get; private set; }
+        public DateTime EndDate { get; private set; }
+
+        public AvailabilityPeriod(DateTime startDate, DateTime endDate)
+        {
+            StartDate = startDate;
+            EndDate = endDate;
         }
     }
 }

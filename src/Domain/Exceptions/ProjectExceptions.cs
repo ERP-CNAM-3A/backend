@@ -81,4 +81,27 @@
         {
         }
     }
+
+    public class ProjectUpdateWorkDaysException : Exception
+    {
+        public double RequestedWorkDays { get; }
+        public double TotalDaysWorking { get; }
+
+        public ProjectUpdateWorkDaysException(double requestedWorkDays, double totalDaysWorking)
+            : base($"Cannot update project workDaysNeeded to {requestedWorkDays} because the total days working from resources is {totalDaysWorking}. First deassign some ressources")
+        {
+            RequestedWorkDays = requestedWorkDays;
+            TotalDaysWorking = totalDaysWorking;
+        }
+
+        public ProjectUpdateWorkDaysException(string message)
+            : base(message)
+        {
+        }
+
+        public ProjectUpdateWorkDaysException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+    }
 }
