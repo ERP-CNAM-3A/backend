@@ -18,7 +18,7 @@ namespace Application.UseCases.Projects.Queries
             List<ProjectSimulationResult> results = projects.Select(project => new ProjectSimulationResult
             {
                 ProjectId = project.Id,
-                WorkDays = project.WorkDaysNeeded,
+                WorkDaysNeeded = project.WorkDaysNeeded,
                 RessourcesAssigned = project.Ressources.Count,
                 AvailableWorkDays = project.Ressources.Sum(r => r.DaysWorking),
                 RemainingNeededWorkDays = project.WorkDaysNeeded - project.Ressources.Sum(r => r.DaysWorking),
