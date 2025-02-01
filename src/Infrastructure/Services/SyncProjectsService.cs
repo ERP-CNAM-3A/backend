@@ -13,6 +13,7 @@ namespace Infrastructure.Services
     public class SyncProjectsService
     {
         private readonly ExternalSaleService _externalSaleService;
+        private readonly ExternalRessourceService _externalRessourceService;
         private readonly IProjectRepository _projectRepository;
         private readonly IMediator _mediator;
 
@@ -21,11 +22,13 @@ namespace Infrastructure.Services
         /// </summary>
         public SyncProjectsService(
             ExternalSaleService externalSaleService,
+            ExternalRessourceService externalRessourceService,
             IProjectRepository projectRepository,
             IMediator mediator)
         {
             _externalSaleService = externalSaleService;
             _projectRepository = projectRepository;
+            _externalRessourceService = externalRessourceService;
             _mediator = mediator;
         }
 
@@ -74,14 +77,11 @@ namespace Infrastructure.Services
                 // If no project exists for this sale, proceed to create a new project
                 if (existingProject == null)
                 {
-                    // Generate a random number of days for the project (between 1 and 30)
-                    var randomDays = new Random().Next(1, 30);
-
                     // Create a new project with the external sale, random days, and empty resources list
                     var project = new Project
                     {
                         Sale = sale,
-                        WorkDaysNeeded = randomDays,
+                        WorkDaysNeeded = 0,
                         Ressources = new List<Ressource>()
                     };
 
@@ -114,6 +114,14 @@ namespace Infrastructure.Services
                 // If the sale no longer exists, delete the project
                 if (correspondingSale == null)
                 {
+                    // Cancel reservations for all resources in the project
+                    foreach (var ressource in existingProject.Ressources)
+                    {
+                        foreach (var period in ressource.AvailabilityPeriods)
+                        {
+                            await _externalRessourceService.CancelReservationAsync(ressource.Id, period.StartDate, period.EndDate);
+                        }
+                    }
                     // Delete the orphaned project
                     _projectRepository.DeleteById(existingProject.Id);
                 }

@@ -1,5 +1,4 @@
 ﻿using API.DTO.RessourceDTOs;
-using Application.UseCases.Ressources.Commands;
 using Application.UseCases.Ressources.Queries;
 using Domain.Entities.Ressources;
 using MediatR;
@@ -12,10 +11,12 @@ namespace API.Controllers
     public class RessourceController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<RessourceController> _logger;
 
-        public RessourceController(IMediator mediator)
+        public RessourceController(IMediator mediator, ILogger<RessourceController> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         #region GET
@@ -27,108 +28,57 @@ namespace API.Controllers
         [HttpGet("GetAllRessources")]
         public async Task<IActionResult> GetAllRessources()
         {
+            _logger.LogInformation("GetAllRessources called");
             try
             {
                 var query = new GetAllRessources_Query();
                 List<Ressource> ressources = await _mediator.Send(query);
-                return Ok(ressources.Select(ressource => new RessourceDTO(ressource)));
+                var result = ressources.Select(r => new LightRessourceDto
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Type = r.Type
+                }).ToList();
+                _logger.LogInformation("GetAllRessources succeeded");
+                return Ok(result);
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "GetAllRessources failed");
                 return BadRequest(e.Message);
             }
         }
 
         /// <summary>
-        /// Retrieves a ressource by its unique identifier (ID).
+        /// Retrieves available ressources between the specified dates.
         /// </summary>
-        /// <param name="id">The unique identifier of the ressource.</param>
-        /// <returns>The details of the ressource with the specified ID.</returns>
-        [HttpGet("GetRessourceById/{id}")]
-        public async Task<IActionResult> GetRessourceById(Guid id)
+        /// <param name="dto">The DTO containing the start and end dates.</param>
+        /// <returns>A list of available ressources between the specified dates.</returns>
+        [HttpPost("GetAvailableRessourcesBetween")]
+        public async Task<IActionResult> GetAvailableRessourcesBetween([FromBody] AvailabilityPeriodDTO dto)
         {
-            var query = new GetRessourceById_Query(id);
+            _logger.LogInformation("GetAvailableRessourcesBetween called with StartDate: {StartDate}, EndDate: {EndDate}", dto.StartDate, dto.EndDate);
+            var query = new GetAvailableRessourcesBetween_Query(dto.StartDate, dto.EndDate);
             try
             {
-                Ressource ressource = await _mediator.Send(query);
-                return Ok(new RessourceDTO(ressource));
+                List<Ressource> ressources = await _mediator.Send(query);
+                var result = ressources.Select(r => new RessourceWithAvailabilityDTO
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Type = r.Type,
+                    AvailabilityPeriods = r.AvailabilityPeriods.Select(p => new AvailabilityPeriodDTO
+                    {
+                        StartDate = p.StartDate,
+                        EndDate = p.EndDate
+                    }).ToList()
+                }).ToList();
+                _logger.LogInformation("GetAvailableRessourcesBetween succeeded");
+                return Ok(result);
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
-            }
-        }
-
-        #endregion
-
-        #region POST
-
-        /// <summary>
-        /// Creates a new ressource.
-        /// </summary>
-        /// <param name="input">The ressource data transfer object containing information for creating the ressource.</param>
-        /// <returns>The details of the newly created ressource.</returns>
-        [HttpPost("CreateRessource")]
-        public async Task<IActionResult> CreateRessource(RessourceDTO input)
-        {
-            var command = new CreateRessource_Command(
-                input.From, input.To);
-            try
-            {
-                Ressource createdRessource = await _mediator.Send(command);
-                return Ok(new RessourceDTO(createdRessource));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        #endregion
-
-        #region PUT
-
-        /// <summary>
-        /// Updates the details of an existing ressource by its unique identifier (ID).
-        /// </summary>
-        /// <param name="id">The unique identifier of the ressource.</param>
-        /// <param name="input">The ressource data transfer object containing the updated details of the ressource.</param>
-        /// <returns>The details of the updated ressource.</returns>
-        [HttpPut("UpdateRessource/{id}")]
-        public async Task<IActionResult> UpdateRessource(Guid id, UpdateRessourceDTO input)
-        {
-            var command = new UpdateRessource_Command(id, input.From, input.To);
-            try
-            {
-                Ressource ressourceUpdated = await _mediator.Send(command);
-                return Ok(new RessourceDTO(ressourceUpdated));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        #endregion
-
-        #region DELETE
-
-        /// <summary>
-        /// Deletes a ressource by its unique identifier (ID).
-        /// </summary>
-        /// <param name="id">The unique identifier of the ressource to be deleted.</param>
-        /// <returns>An IActionResult indicating the result of the delete operation.</returns>
-        [HttpDelete("DeleteRessource/{id}")]
-        public async Task<IActionResult> DeleteRessource(Guid id)
-        {
-            var command = new DeleteRessource_Command(id);
-            try
-            {
-                await _mediator.Send(command);
-                return Ok(id);
-            }
-            catch (Exception e)
-            {
+                _logger.LogError(e, "GetAvailableRessourcesBetween failed");
                 return BadRequest(e.Message);
             }
         }

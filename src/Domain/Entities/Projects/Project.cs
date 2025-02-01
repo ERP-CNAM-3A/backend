@@ -38,10 +38,9 @@ namespace Domain.Entities.Projects
             Ressources = ressources;
         }
 
-        public void Update(double workDaysNeeded, List<Ressource> ressources)
+        public void Update(double workDaysNeeded)
         {
             WorkDaysNeeded = workDaysNeeded;
-            Ressources = ressources;
         }
     }
 }

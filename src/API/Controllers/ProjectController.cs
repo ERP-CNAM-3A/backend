@@ -1,4 +1,5 @@
 ﻿using API.DTO.ProjectDTOs;
+using API.DTO.RessourceDTOs;
 using Application.UseCases.Projects.Commands;
 using Application.UseCases.Projects.Queries;
 using Domain.Entities.Projects;
@@ -140,8 +141,7 @@ namespace API.Controllers
         {
             var command = new UpdateProject_Command(
                 id,
-                input.WorkDaysNeeded,
-                input.Ressources
+                input.WorkDaysNeeded
             );
             try
             {
@@ -153,24 +153,51 @@ namespace API.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-        #endregion
-
-        #region DELETE
-
         /// <summary>
-        /// Deletes a project by its unique identifier (ID).
+        /// Assigns a resource to a project by its unique identifier (ID).
         /// </summary>
-        /// <param name="id">The unique identifier of the project to be deleted.</param>
-        /// <returns>An IActionResult indicating the result of the delete operation.</returns>
-        [HttpDelete("DeleteProject/{id}")]
-        public async Task<IActionResult> DeleteProject(Guid id)
+        /// <param name="id">The unique identifier of the project.</param>
+        /// <param name="input">The data transfer object containing the details of the resource assignment.</param>
+        /// <returns>The details of the updated project.</returns>
+        [HttpPut("AssignRessource/{id}")]
+        public async Task<IActionResult> AssignRessource(Guid id, AssignRessourceDTO input)
         {
-            var command = new DeleteProject_Command(id);
+            var command = new AssignRessource_Command(
+                id,
+                input.RessourceId,
+                input.From,
+                input.To
+            );
             try
             {
-                await _mediator.Send(command);
-                return Ok(id);
+                Project project = await _mediator.Send(command);
+                return Ok(new ProjectDTO(project));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Deassigns a resource from a project by its unique identifier (ID).
+        /// </summary>
+        /// <param name="id">The unique identifier of the project.</param>
+        /// <param name="input">The data transfer object containing the details of the resource deassignment.</param>
+        /// <returns>The details of the updated project.</returns>
+        [HttpPut("DeassignRessource/{id}")]
+        public async Task<IActionResult> DeassignRessource(Guid id, AssignRessourceDTO input)
+        {
+            var command = new DeassignRessource_Command(
+                id,
+                input.RessourceId,
+                input.From,
+                input.To
+            );
+            try
+            {
+                Project project = await _mediator.Send(command);
+                return Ok(new ProjectDTO(project));
             }
             catch (Exception e)
             {
@@ -179,5 +206,6 @@ namespace API.Controllers
         }
 
         #endregion
+
     }
 }

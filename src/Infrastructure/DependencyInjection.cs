@@ -15,6 +15,7 @@ namespace Infrastructure
             // Register services
             services.AddSingleton<MiddlewareRegistrationService>();
             services.AddHttpClient<ExternalSaleService>();
+            services.AddHttpClient<ExternalRessourceService>();
             services.AddScoped<SyncProjectsService>();
             services.AddHostedService<SyncProjectsBackgroundService>();
         }
@@ -22,7 +23,7 @@ namespace Infrastructure
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IProjectRepository, ProjectRepository>();
-            services.AddScoped<IRessourceRepository, RessourceRepository>();
+            services.AddScoped<IExternalRessourceService, ExternalRessourceService>();
             services.AddScoped<ISaleRepository, SaleRepository>();
         }
     }
