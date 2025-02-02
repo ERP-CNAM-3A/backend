@@ -1,7 +1,6 @@
 ﻿using API.DTO.SaleDTOs;
 using Domain.Entities.Sales;
 using Infrastructure.Services;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,12 +9,10 @@ namespace API.Controllers
     [Route("[controller]")]
     public class SaleController : ControllerBase
     {
-        private readonly IMediator _mediator;
         private readonly ExternalSaleService _externalSaleService;
 
-        public SaleController(IMediator mediator, ExternalSaleService externalSaleService)
+        public SaleController(ExternalSaleService externalSaleService)
         {
-            _mediator = mediator;
             _externalSaleService = externalSaleService;
         }
 
