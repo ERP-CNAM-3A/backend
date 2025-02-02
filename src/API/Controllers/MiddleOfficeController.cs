@@ -39,7 +39,7 @@ namespace API.Controllers
                     Description = "Retourne un projet par son ID",
                     Type = "GET",
                     RouteFormat = "/id",
-                    QueryParams = ["ID_projet"],
+                    QueryParams = null,
                     Body = null
                 }
             };
