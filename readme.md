@@ -1,173 +1,164 @@
+# Projet ERP - P Projet
 
+## **1. Introduction**
 
-## 1. Introduction
+Ce projet fait partie d’un **ERP** et a pour objectif de gérer les **projets** en intégrant des données provenant d’autres modules ERP via le **Middle Office**. Voici un aperçu des éléments qu'il couvre :
 
-Le projet **P Projet** a pour objectif de suivre les projets :  
+-   **Saisie de temps** des ressources sur projet
+-   **Saisie de projets** avec association d’un client
+-   **Simulation** pour évaluer la faisabilité d’honorer les commandes et livrer les clients
+-   **Calcul des retards** et estimation des ressources supplémentaires nécessaires
+-   **Intégration** des devis et opportunités de vente (pondérées par un pourcentage de chance)
 
-- **Saisie de temps** des ressources sur projet  
-- **Saisie de projets** avec association d’un client  
-- **Simulation** pour évaluer la faisabilité d’honorer les commandes et livrer les clients  
-- **Calcul des retards** et estimation des ressources supplémentaires nécessaires  
-- **Intégration** des devis et opportunités de vente (pondérées par un pourcentage de chance)
+## **2. L'Architecture**
 
-## 2. Architecture et Modules Interconnectés
+L'application est basée sur une **architecture hexagonale (ports/adapters)** pour assurer une séparation des responsabilités.
+![alt text](image-5-768x432.png)
 
-Le projet est organisé en plusieurs couches et modules complémentaires, chacun jouant un rôle précis dans l’ensemble de l’application :
+### **Les 4 couches principales**
 
-- **API**  
-  Le point d’entrée de l’application, développé en ASP.NET Core, expose des endpoints REST permettant d’interagir avec les différents modules.  
-  Les endpoints se regroupent par domaines fonctionnels : *MiddleOffice*, *Project*, *Ressource* et *Sale*.
+-   **API**
 
-- **Application (UseCases)**  
-  Contient la logique métier organisée en cas d’utilisation (UseCases).  
-  Par exemple, la création et la mise à jour des projets, l’assignation/désassignation des ressources, la simulation de la livraison des projets et la récupération des ventes externes.
+    -   Expose les endpoints REST via ASP.NET Core.
+    -   Utilise des **DTOs** pour sérialiser/désérialiser les données.
+    -   Contient les **controllers** qui orchestrent les requêtes et les envoient à la couche **Application**.
 
-- **Domain**  
-  Définit les entités métiers (telles que *Project*, *Ressource*, *Sale*) ainsi que les règles et exceptions spécifiques au domaine.
+-   **Application (UseCases)**
 
-- **Infrastructure**  
-  Implémente les aspects techniques et l’intégration avec des services externes ainsi que la persistance via des repositories.  
-  Un service de synchronisation (*SyncProjectsService*) est également présent pour mettre à jour les projets.
+    -   Contient la **logique métier**.
+    -   Organisée selon un **modèle CQRS** :
+        -   **Commands** : pour les actions qui modifient l’état de l’application (ex. création de projet).
+        -   **Queries** : pour la récupération de données sans effet de bord (ex. obtenir la liste des projets).
 
-L’architecture suit le principe de séparation des responsabilités et permet ainsi une interconnexion cohérente entre les modules grâce aux contrats (interfaces et DTOs).
+-   **Domain**
 
-## 3. Description des Interfaces (Entrées / Sorties)
+    -   Contient les **entités métier** (`Project`, `Ressource`, `Sale`).
+    -   Définit les **exceptions métier** (`ProjectExceptions`, `RessourceExceptions`, etc.).
+    -   Contient les **repositories abstraits** qui seront implémentés dans **Infrastructure**.
 
-L’API expose une série d’endpoints dont voici une description synthétique avec les spécifications techniques de leurs interfaces :
+-   **Infrastructure**
+    -   Implémente les **repositories** pour la persistance des données.
+    -   Contient les **services d’intégration** avec le Middle Office et les autres modules ERP (`ExternalRessourceService`, `ExternalSaleService`).
+    -   Fournit des **jobs de synchronisation** (`SyncProjectsBackgroundService`) pour actualiser les données périodiquement.
 
-### 3.1. Module MiddleOffice
+---
 
-- **Endpoint** : `/meuch_map`  
-  **Méthode** : `GET`  
-  **Description** : Utilisé par le MiddleOffice pour enregistrer les endpoints du logiciel Projet
-  **Entrées** : Aucune  
-  **Sorties** :  
-  - Code `200` avec une réponse (message ou données de diagnostic)
+## **3. Fonctionnalités clés et modules interconnectés**
 
-### 3.2. Module Project
+### **3.1. Intégration avec les autres modules**
 
-Les endpoints du module *Project* gèrent la création, la mise à jour, la simulation et la synchronisation des projets.
+L’application interagit avec **deux autres modules ERP** via le **Middle Office** :
 
-- **Récupération de tous les projets**  
-  **Endpoint** : `/Project/GetAllProjects`  
-  **Méthode** : `GET`  
-  **Entrées** : Aucune  
-  **Sorties** :  
-  
-  - Code `200` avec la liste des projets au format JSON
+-   **ACHAT/VENTE** → Récupération des ventes (`Commande`, `Devis`, `Opportunité`).
+-   **STORE** → Assignation / désassignation / récupération des ressources pour les projets.
 
-- **Récupération d’un projet par son identifiant**  
-  **Endpoint** : `/Project/GetProjectById/{id}`  
-  **Méthode** : `GET`  
-  **Entrées** :  
-  
-  - Paramètre `id` dans l’URL (UUID)  
-    **Sorties** :  
-  - Code `200` avec le détail du projet au format JSON
+### **3.2. Gestion des projets**
 
-- **Simulation de la livraison de tous les projets**  
-  **Endpoint** : `/Project/SimulateProjectsDelivery`  
-  **Méthode** : `GET`  
-  **Entrées** : Aucune  
-  **Sorties** :  
-  
-  - Code `200` avec les résultats de simulation
+-   Création et mise à jour des projets.
+-   Assignation et désassignation de ressources.
+-   Simulation de faisabilité pour savoir si un projet peut être honoré.
 
-- **Simulation de la livraison pour un projet précis**  
-  **Endpoint** : `/Project/SimulateProjectDeliveryById/{id}`  
-  **Méthode** : `GET`  
-  **Entrées** :  
-  
-  - Paramètre `id` dans l’URL (UUID)  
-    **Sorties** :  
-  - Code `200` avec le résultat de simulation détaillé pour le projet concerné
+### **3.3. Synchronisation automatique**
 
-- **Mise à jour d’un projet**  
-  **Endpoint** : `/Project/UpdateProject/{id}`  
-  **Méthode** : `PUT`  
-  **Entrées** :  
-  
-  - Paramètre `id` dans l’URL (UUID)  
-  - Corps de la requête : JSON conforme au schéma `UpdateProjectDTO`  
-    - Exemple de propriété : `workDaysNeeded` (nombre à virgule)
-      **Sorties** :  
-  - Code `200` indiquant la réussite de la mise à jour
+-   Un **background job** met à jour les projets en récupérant périodiquement les nouvelles ventes.
 
-- **Assignation d’une ressource à un projet**  
-  **Endpoint** : `/Project/AssignRessource/{id}`  
-  **Méthode** : `PUT`  
-  **Entrées** :  
-  
-  - Paramètre `id` dans l’URL (UUID du projet)  
-  - Corps de la requête : JSON conforme au schéma `AssignRessourceDTO`  
-    - Propriétés : `ressourceId` (entier), `from` (date-heure), `to` (date-heure)
-      **Sorties** :  
-  - Code `200` pour confirmer l’assignation
+---
 
-- **Désassignation d’une ressource d’un projet**  
-  **Endpoint** : `/Project/DeassignRessource/{id}`  
-  **Méthode** : `PUT`  
-  **Entrées** :  
-  
-  - Paramètre `id` dans l’URL (UUID du projet)  
-  - Corps de la requête : JSON conforme au schéma `AssignRessourceDTO` (même format que pour l’assignation)  
-    **Sorties** :  
-  - Code `200` indiquant la réussite de l’opération
+## **4. Comment cloner et lancer le projet**
 
-- **Synchronisation des projets**  
-  **Endpoint** : `/Project/SyncProjects`  
-  **Méthode** : `POST`  
-  **Entrées** : Aucune (le déclenchement peut être automatisé ou manuel via ce point)  
-  **Sorties** :  
-  
-  - Code `200` indiquant la réussite de la synchronisation
+### **4.1. Prérequis**
 
-### 3.3. Module Ressource
+-   [.NET](https://dotnet.microsoft.com/download)
+-   [Visual Studio](https://visualstudio.microsoft.com/fr/downloads/)
 
-Les endpoints du module *Ressource* permettent de gérer les ressources disponibles et leur assignation sur les périodes définies.
+### **4.2. Installation**
 
-- **Récupération de toutes les ressources**  
-  **Endpoint** : `/Ressource/GetAllRessources`  
-  **Méthode** : `GET`  
-  **Entrées** : Aucune  
-  **Sorties** :  
-  
-  - Code `200` avec la liste des ressources disponibles au format JSON
+1. **Cloner le projet**
 
-- **Recherche des ressources disponibles entre deux dates**  
-  **Endpoint** : `/Ressource/GetAvailableRessourcesBetween`  
-  **Méthode** : `POST`  
-  **Entrées** :  
-  
-  - Corps de la requête : JSON conforme au schéma `AvailabilityPeriodDTO`  
-    - Propriétés : `startDate` et `endDate` (dates au format date-time)
-      **Sorties** :  
-  - Code `200` avec la liste des ressources disponibles pour la période demandée
+    ```bash
+    git clone https://github.com/ERP-CNAM-3A/backend.git
+    ```
 
-### 3.4. Module Sale
+2. **Lancer l’application**
 
-Le module *Sale* est principalement utilisé pour récupérer les informations des ventes externes.
+3. **Accéder à la documentation Swagger**
+    ```
+    http://localhost:5256/swagger/index.html
+    ```
 
-- **Récupération des ventes externes**  
-  **Endpoint** : `/Sale/GetExternalSales`  
-  **Méthode** : `GET`  
-  **Entrées** : Aucune  
-  **Sorties** :  
-  - Code `200` avec la liste sous forme de JSON
+---
 
-## 4. Formats et Conventions
+## **5. Endpoints API**
 
-- **Format des données**  
-  Tous les échanges se font au format JSON. Les dates sont transmises au format ISO 8601 (date-time).  
-  Les DTOs définissent des schémas stricts avec l’utilisation de `additionalProperties: false` pour garantir la validation des données.
+## **1️⃣ Middle Office**
 
-- **Gestion des erreurs**  
-  Les erreurs métier et techniques sont gérées au niveau du domaine via des exceptions spécifiques (voir les fichiers dans `Domain\Exceptions`).  
-  Les contrôleurs de l’API renvoient des codes HTTP appropriés (par exemple, `400` pour une mauvaise requête, `404` si une entité n’est pas trouvée, etc.).
+| Méthode | Endpoint     | Description                                                              |
+| ------- | ------------ | ------------------------------------------------------------------------ |
+| `GET`   | `/meuch_map` | Utilisé par le middle office afin de register certains de nos endpoints. |
 
-## 5. Conclusion
+---
 
-L’architecture du projet **P Projet** contient une structure claire et une séparation entre la couche d’interface (API), la logique métier (Application/UseCases) et le domaine.  
-Les modules interconnectés (*Project*, *Ressource*, *Sale* et *MiddleOffice*) communiquent de manière cohérente grâce à des interfaces REST bien définies et des DTOs permettant d’assurer l’intégrité des échanges.
+## **2️⃣ Gestion des Projets**
 
-Le projet répond aux objectifs initiaux en assurant un suivi des projets, une simulation des ressources et des livraisons, et en intégrant des services externes. La conception orientée domaine et l’utilisation d’une architecture en couches garantissent la robustesse et la pérennité de la solution ERP.
+| Méthode | Endpoint                                       | Description                                                                               |
+| ------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `GET`   | `/Project/GetAllProjects`                      | Récupère tous les projets gérés par notre service.                                        |
+| `GET`   | `/Project/GetProjectById/{id}`                 | Récupère un projet spécifique via son ID.                                                 |
+| `GET`   | `/Project/SimulateProjectsDelivery`            | Simule la faisabilité de l'ensemble des projets en fonction des ressources et des ventes. |
+| `GET`   | `/Project/SimulateProjectDeliveryById/{id}`    | Simule la faisabilité d’un projet spécifique.                                             |
+| `POST`  | `/Project/SyncProjects` _(EXTERNAL)_           | Pour synchroniser les projets avec les ventes.                                            |
+| `PUT`   | `/Project/UpdateProject/{id}`                  | Met à jour un projet existant (durée).                                                    |
+| `PUT`   | `/Project/AssignRessource/{id}` _(EXTERNAL)_   | Permet de réserver une ressource pour un projet.                                          |
+| `PUT`   | `/Project/DeassignRessource/{id}` _(EXTERNAL)_ | Permet de libérer une ressource affectée à un projet.                                     |
+
+---
+
+## **3️⃣ Gestion des Ressources** _(via Middle Office)_
+
+| Méthode | Endpoint                                                | Description                                                        |
+| ------- | ------------------------------------------------------- | ------------------------------------------------------------------ |
+| `GET`   | `/Ressource/GetAllRessources` _(EXTERNAL)_              | Pour récupérer toutes les ressources.                              |
+| `POST`  | `/Ressource/GetAvailableRessourcesBetween` _(EXTERNAL)_ | Pour obtenir la liste des ressources disponibles entre deux dates. |
+
+---
+
+## **4️⃣ Gestion des Ventes** _(via Middle Office)_
+
+| Méthode | Endpoint                              | Description                                                              |
+| ------- | ------------------------------------- | ------------------------------------------------------------------------ |
+| `GET`   | `/Sale/GetExternalSales` _(EXTERNAL)_ | Pour récupérer les ventes externes (`Commande`, `Devis`, `Opportunité`). |
+
+---
+
+## **6. Documentation et Commentaires**
+
+-   Un **Swagger** est disponible pour documenter l’API.
+-   Le **code est commenté** pour faciliter la compréhension et l’évolution du projet.
+-   Pour la documentation de l'intégration au Middle Office, se référer au readme du Middle Office
+
+---
+
+## **7. Déploiement et CI/CD**
+
+-   **CI/CD** est mis en place via une **GitHub Actions**
+-   Le projet est **conteneurisé avec Docker** et **déployé sur un serveur interne**
+-   L’application tourne **24/7** sur notre serveur.
+
+---
+
+## **8. Points Clés de l’Architecture**
+
+### ✅ **Modularité et scalabilité**
+
+-   L’architecture **hexagonale** permet d’ajouter facilement de nouvelles fonctionnalités et entités.
+-   Idéale pour un **ERP** qui évolue dans le temps.
+
+### ✅ **Facilité pour les tests**
+
+-   La **séparation des couches** permet des tests unitaires indépendants (on pourrait facilement mocker `ExternalRessourceService` pour tester les projets sans appel à STORE).
+-   **CQRS** permet de tester séparément les **commands** et **queries**.
+
+### ✅ **Collaboration avec les autres modules**
+
+-   Un **gros challenge** a été de **définir les besoins** des autres groupes et ce dont nous avions besoin d’eux.
+-   Communication avec l’équipe STORE et ACHAT/VENTE (via middle office) pour aligner les informations.
